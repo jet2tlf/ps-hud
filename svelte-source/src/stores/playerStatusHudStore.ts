@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { faHeart, faShieldAlt, faHamburger, faTint, faStream,
+import { faHeart, faShieldAlt, faHamburger, faTint, faBrain, faStream,
   faParachuteBox, faMeteor, faLungs, faOilCan, faUserSlash,
   faTachometerAltFast, faTerminal, faHeadset, faMicrophone,
 } from '@fortawesome/free-solid-svg-icons'
@@ -48,7 +48,6 @@ type playerHudUpdateMessageType = {
   nos: number,
   cruise: boolean,
   nitroActive: boolean,
-  harness: boolean,
   hp: number,
   speed: number,
   engine: number,
@@ -86,19 +85,19 @@ const store = () => {
         armed: getLocalStorage("armed", defaultHudIcon("armed", false, faStream)),
         parachute: getLocalStorage("parachute", defaultHudIcon("parachute", false, faParachuteBox)),
         engine: getLocalStorage("engine", defaultHudIcon("engine", false, faOilCan)),
-        harness: getLocalStorage("harness", defaultHudIcon("harness", false, faUserSlash)),
         cruise: getLocalStorage("cruise", defaultHudIcon("cruise", false, faTachometerAltFast)),
         nitro: getLocalStorage("nitro", defaultHudIcon("nitro", false, faMeteor)),
         dev: getLocalStorage("dev", defaultHudIcon("dev", false, faTerminal)),
       },
       dynamicIcons: getLocalStorage("dynamicIcons", {
         armor: false, engine: false, health: false,
-        hunger: false, nitro: false, oxygen: false, thirst: false,
+        hunger: false, nitro: false, oxygen: false,
+        thirst: false,
       }),
       saveUIState: "ready",
       show: false,
       showingOrder: ["voice", "health", "armor", "hunger", "thirst", "oxygen", "armed",
-        "parachute", "engine", "harness", "cruise", "nitro", "dev"],
+        "parachute", "engine", "cruise", "nitro", "dev"],
     }
   }
 
@@ -266,8 +265,6 @@ const store = () => {
         state.icons.oxygen.progressValue = capAmountToHundred(data.oxygen);
         state.icons.parachute.progressValue = capAmountToHundred(data.parachute);
         state.icons.engine.progressValue = capAmountToHundred(data.engine);
-        // I am guessing harness hp max is 20?
-        state.icons.harness.progressValue = capAmountToHundred(data.hp*5);
         state.icons.cruise.progressValue = capAmountToHundred(data.speed);
         // This needs to be a number so default to 0
         state.icons.nitro.progressValue = capAmountToHundred(data.nos || 0);
@@ -345,12 +342,6 @@ const store = () => {
           state.icons.cruise.isShowing = true;
         } else {
           state.icons.cruise.isShowing = false;
-        }
-  
-        if (data.harness) {
-          state.icons.harness.isShowing = true;
-        } else {
-          state.icons.harness.isShowing = false;
         }
         
         if (data.armed) {

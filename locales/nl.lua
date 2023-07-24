@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motor aangezet!",
         ["engine_off"] = "Motor uitgezet!",
         ["low_fuel"] = "Laag brandstofniveau!",
-        ["access_denied"] = "Je bent niet gemachtigd!",
-        ["stress_gain"] = "Je voelt je meer gestrest!",
-        ["stress_removed"] = "Je voelt je meer relaxed!"
+        ["access_denied"] = "Je bent niet gemachtigd!"
     }
 }
 

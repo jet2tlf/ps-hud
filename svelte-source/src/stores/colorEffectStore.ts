@@ -107,11 +107,6 @@ const store = () => {
           ],
           editableColors: defaultEditableColor(),
         }),
-        harness: getLocalStorage("harness", {
-          currentEffect: 0,
-          colorEffects: [defaultColorEffect("normal", "#b648ff")],
-          editableColors: defaultEditableColor(),
-        }),
         cruise: getLocalStorage("cruise", {
           currentEffect: 0,
           colorEffects: [defaultColorEffect("normal", "#ff4885")],

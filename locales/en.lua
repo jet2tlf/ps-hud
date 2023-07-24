@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Engine Started!",
         ["engine_off"] = "Engine Shut Down!",
         ["low_fuel"] = "Fuel Level Low!",
-        ["access_denied"] = "You Are Not Authorized!",
-        ["stress_gain"] = "Feeling More Stressed!",
-        ["stress_removed"] = "Feeling More Relaxed!"
+        ["access_denied"] = "You Are Not Authorized!"
     },
     info = {
         ["toggle_engine"] = "Toggle Engine",

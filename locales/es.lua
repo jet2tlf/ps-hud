@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motor encedido",
         ["engine_off"] = "Motor apagado",
         ["low_fuel"] = "¡Nivel de gasolina bajo!",
-        ["access_denied"] = "¡No estás autorizado!",
-        ["stress_gain"] = "Te estás sintiéndo más estresado(o)",
-        ["stress_removed"] = "Te estás sintiéndo más relajado(a)"
+        ["access_denied"] = "¡No estás autorizado!"
     },
     info = {
         ["toggle_engine"] = "Encender/apagar motor",

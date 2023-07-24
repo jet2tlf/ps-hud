@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motorn startade!",
         ["engine_off"] = "Motorn stängs av!",
         ["low_fuel"] = "Låg bränslenivå!",
-        ["access_denied"] = "Du är inte behörighet att göra detta!",
-        ["stress_gain"] = "Känner dig mer stressad!",
-        ["stress_removed"] = "Känner dig mer avslappnad!"
+        ["access_denied"] = "Du är inte behörighet att göra detta!"
     }
 }
 

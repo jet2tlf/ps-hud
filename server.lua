@@ -1,75 +1,26 @@
-local ResetStress = false
+ESX.RegisterCommand({'cash'}, 'user', function(xPlayer, args, showError)
+    local cashamount = xPlayer.getAccount('money').money
+    xPlayer.triggerEvent('hud:client:ShowAccounts', 'cash', cashamount)
+end, false, {help = Lang:t('info.check_cash_balance')})
 
-RegisterCommand('cash', function(source, args)
-    local Player = ESX.GetPlayerFromId(source)
-    local cashamount = Player.getAccount('money').money
-    TriggerClientEvent('hud:client:ShowAccounts', source, 'cash', cashamount)
-end)
+ESX.RegisterCommand({'bank'}, 'user', function(xPlayer, args, showError)
+    local bankamount = xPlayer.getAccount('bank').money
+    xPlayer.triggerEvent('hud:client:ShowAccounts', 'bank', bankamount)
+end, false, {help = Lang:t('info.check_bank_balance')})
 
-RegisterCommand('bank', function(source, args)
-    local Player = ESX.GetPlayerFromId(source)
-    local bankamount = Player.getAccount('bank').money
-    TriggerClientEvent('hud:client:ShowAccounts', source, 'bank', bankamount)
-end)
-
-RegisterCommand("dev", function(source, args)
-    TriggerClientEvent("hud:client:ToggleDevmode", source)
-end, 'admin')
-
-RegisterNetEvent('hud:server:GainStress', function(amount)
-    local src = source
-    local Player = ESX.GetPlayerFromId(src)
-    local newStress
-    if not Player or (Config.DisablePoliceStress and Player.PlayerData.job.name == 'police') then return end
-    if not ResetStress then
-        if not Player.get('stress') then
-            Player.set('stress', 0)
-        end
-        newStress = Player.get('stress') + amount
-        if newStress <= 0 then newStress = 0 end
-    else
-        newStress = 0
-    end
-    if newStress > 100 then
-        newStress = 100
-    end
-    Player.set('stress')
-    TriggerClientEvent('hud:client:UpdateStress', src, newStress)
-    Player.showNotification(Lang:t("notify.stress_gain"))
-end)
-
-RegisterNetEvent('hud:server:RelieveStress', function(amount)
-    local src = source
-    local Player = ESX.GetPlayerFromId(src)
-    local newStress
-    if not Player then return end
-    if not ResetStress then
-        if not Player.get('stress') then
-            Player.set('stress', 0)
-        end
-        newStress = Player.get('stress') - amount
-        if newStress <= 0 then newStress = 0 end
-    else
-        newStress = 0
-    end
-    if newStress > 100 then
-        newStress = 100
-    end
-    Player.set('stress')
-    TriggerClientEvent('hud:client:UpdateStress', src, newStress)
-    Player.showNotification(Lang:t("notify.stress_removed"))
-end)
+ESX.RegisterCommand({'dev'}, 'admin', function(xPlayer, args, showError)
+    xPlayer.triggerEvent('hud:client:ToggleDevmode')
+end, false, {help = Lang:t('info.toggle_dev_mode')})
 
 RegisterNetEvent('hud:server:saveUIData', function(data)
     local src = source
 	-- Check Permissions
-    local xPlayer = ESX.GetPlayerFromId(src)
-    if not xPlayer.getGroup(src, 'admin') and not IsPlayerAceAllowed(src, 'command') then
-        return
-    end
+    local Player = ESX.GetPlayerFromId(src)
+    if not Player.getGroup(src, 'admin') and not IsPlayerAceAllowed(src, 'command') then
+		return
+	end
 
     -- Ensure a player is invoking this net event
-    local Player = ESX.GetPlayerFromId(src)
 	if not Player then return end
 
     local uiConfigData = {}
@@ -200,40 +151,10 @@ end)
 
 ESX.RegisterServerCallback('hud:server:getRank', function(source, cb)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local xPlayer = ESX.GetPlayerFromId(src)
     if xPlayer.getGroup(src, 'admin') or IsPlayerAceAllowed(src, 'command') then
         cb(true)
     else
         cb(false)
-    end
-end)
-
-ESX.RegisterUsableItem("harness", function(source, item)
-    local src = source
-    local Player = ESX.GetPlayerFromId(src)
-    TriggerClientEvent('seatbelt:client:UseHarness', src, item)
-end)
-
-RegisterNetEvent('equip:harness', function(item)
-    local src = source
-    local Player = ESX.GetPlayerFromId(src)
-    if Player.PlayerData.items[item.slot].info.uses - 1 == 0 then
-        TriggerClientEvent("inventory:client:ItemBox", src, QBCore.Shared.Items['harness'], "remove")
-        xPlayer.removeInventoryItem('harness', 1)
-    else
-        Player.PlayerData.items[item.slot].info.uses = Player.PlayerData.items[item.slot].info.uses - 1
-        Player.Functions.SetInventory(Player.PlayerData.items)
-    end
-end)
-
-RegisterNetEvent('seatbelt:DoHarnessDamage', function(hp, data)
-    local src = source
-    local Player = ESX.GetPlayerFromId(src)
-
-    if hp == 0 then
-        xPlayer.removeInventoryItem('harness', 1, data.slot)
-    else
-        Player.PlayerData.items[data.slot].info.uses = Player.PlayerData.items[data.slot].info.uses - 1
-        Player.Functions.SetInventory(Player.PlayerData.items)
     end
 end)

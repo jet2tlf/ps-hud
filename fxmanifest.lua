@@ -4,8 +4,10 @@ game 'gta5'
 description 'ps-hud'
 version '2.1.0'
 
+
 shared_scripts {
 	'@es_extended/imports.lua',
+	'@ox_lib/init.lua',
 	'locale.lua',
 	'locales/en.lua',
 	'locales/*.lua',

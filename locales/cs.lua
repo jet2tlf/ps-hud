@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motor nastartován!",
         ["engine_off"] = "Motor vypnut!",
         ["low_fuel"] = "Nedostatek paliva!",
-        ["access_denied"] = "Na toto nemáš oprávnění!",
-        ["stress_gain"] = "Cítíš se být vystresovaná!",
-        ["stress_removed"] = "Cítíš se volněj!"
+        ["access_denied"] = "Na toto nemáš oprávnění!"
     }
 }
 

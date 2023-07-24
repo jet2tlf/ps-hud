@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motor Roshan Shod!",
         ["engine_off"] = "Motor Khamosh Shod!",
         ["low_fuel"] = "Sokht Dar Hale Etmam Ast!",
-        ["access_denied"] = "Shoma Mojaz Be In Kar Nistid!",
-        ["stress_gain"] = "Mizan Estres Dar Hale Afzayesh Ast!",
-        ["stress_removed"] = "Mizan Estres Dar Hale Kahesh Ast!"
+        ["access_denied"] = "Shoma Mojaz Be In Kar Nistid!"
     }
 }
 

@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Moottori käynnistetty!",
         ["engine_off"] = "Moottori sammutettu!",
         ["low_fuel"] = "Bensasi on lopussa!",
-        ["access_denied"] = "Eipä ollut tarpeaksi oikeuksia!",
-        ["stress_gain"] = "Stressisi nousee!",
-        ["stress_removed"] = "Stressisi on nyt loppunut! Otathan ihan clillisti sit"
+        ["access_denied"] = "Eipä ollut tarpeaksi oikeuksia!"
     }
 }
 

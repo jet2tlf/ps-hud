@@ -13,9 +13,7 @@ local Translations = {
         ["engine_on"] = "Motor Çalıştırıldı!",
         ["engine_off"] = "Motor Kapatıldı!",
         ["low_fuel"] = "Yakıt Seviyesi Düşük!",
-        ["access_denied"] = "You Are Not Authorized!",
-        ["stress_gain"] = "Daha Stresli Hissediyorum!",
-        ["stress_removed"] = "Daha Rahatlamış Hissediyorum!"
+        ["access_denied"] = "You Are Not Authorized!"
     }
 }
 

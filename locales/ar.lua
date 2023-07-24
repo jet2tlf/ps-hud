@@ -14,9 +14,7 @@ local Translations = {
         ["engine_on"] = "بدأ المحرك",
         ["engine_off"] = "اغلاق المحرك",
         ["low_fuel"] = "مستوى الوقود منخفض",
-        ["access_denied"] = "غير مسموح لك القيام بذالك",
-        ["stress_gain"] = "الشعور بمزيد من التوتر",
-        ["stress_removed"] = "الشعور براحة أكبر"
+        ["access_denied"] = "غير مسموح لك القيام بذالك"
     }
 }
 

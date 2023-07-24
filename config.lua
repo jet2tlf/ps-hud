@@ -7,7 +7,6 @@ Config.FuelScript = 'ox_fuel' -- change to lj-fuel if you use lj-fuel or somethi
 -- Admin only to change hud icons/shapes
 Config.AdminOnly = false
 
--- Stress
 Config.WhitelistedWeaponArmed = { -- weapons specifically whitelisted to not show armed mode
     -- miscellaneous
     `weapon_petrolcan`,

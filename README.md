@@ -3,8 +3,6 @@
 ### ps-hud
 Ultra customizable hud featuring a unique and robust settings menu. Change eveything about your experience!
 
-Converted and adapted to replace esx_hud (standard hud that comes in recipe esx)
-
 ![Project Sloth Buttons 2](https://user-images.githubusercontent.com/91661118/170895968-c4224105-5c87-4947-af94-8e8bd792f566.png)
 
 ### Optional:

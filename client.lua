@@ -68,7 +68,7 @@ local function CinematicShow(bool)
 end
 
 local function loadSettings()
-    ESX.ShowNotification(Lang:t("notify.hud_settings_loaded"), "success")
+    lib.notify({ description = Lang:t("notify.hud_settings_loaded") })
     Wait(1000)
     TriggerEvent("hud:client:LoadMap")
 end
@@ -165,7 +165,7 @@ RegisterKeyMapping('menu', Lang:t('info.open_menu'), 'keyboard', Config.OpenMenu
 -- Reset hud
 local function restartHud()
     TriggerEvent("hud:client:playResetHudSounds")
-    ESX.ShowNotification(Lang:t("notify.hud_restart"), "error")
+    lib.notify({ description = Lang:t("notify.hud_restart") })
     Wait(1500)
     if IsPedInAnyVehicle(PlayerPedId()) then
         SendNUIMessage({
@@ -192,7 +192,7 @@ local function restartHud()
         show = true,
     })
     Wait(500)
-    ESX.ShowNotification(Lang:t("notify.hud_start"), "success")
+    lib.notify({ description = Lang:t("notify.hud_start") })
     SendNUIMessage({
         action = 'menu',
         topic = 'restart',
@@ -391,7 +391,7 @@ RegisterNetEvent("hud:client:LoadMap", function()
             Wait(150)
         end
         if Menu.isMapNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.load_square_map"))
+            lib.notify({ description = Lang:t("notify.load_square_map") })
         end
         SetMinimapClipType(0)
         AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "squaremap", "radarmasksm")
@@ -420,7 +420,7 @@ RegisterNetEvent("hud:client:LoadMap", function()
         end
         Wait(1200)
         if Menu.isMapNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.loaded_square_map"))
+            lib.notify({ description = Lang:t("notify.loaded_square_map") })
         end
     elseif Menu.isToggleMapShapeChecked == "circle" then
         RequestStreamedTextureDict("circlemap", false)
@@ -428,7 +428,7 @@ RegisterNetEvent("hud:client:LoadMap", function()
             Wait(150)
         end
         if Menu.isMapNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.load_circle_map"))
+            lib.notify({ description = Lang:t("notify.load_circle_map") })
         end
         SetMinimapClipType(1)
         AddReplaceTexture("platform:/textures/graphics", "radarmasksm", "circlemap", "radarmasksm")
@@ -457,7 +457,7 @@ RegisterNetEvent("hud:client:LoadMap", function()
         end
         Wait(1200)
         if Menu.isMapNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.loaded_circle_map"))
+            lib.notify({ description = Lang:t("notify.loaded_circle_map") })
         end
     end
 end)
@@ -557,12 +557,12 @@ RegisterNUICallback('cinematicMode', function(data, cb)
     if data.checked then
         CinematicShow(true)
         if Menu.isCinematicNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.cinematic_on"))
+            lib.notify({ description = Lang:t("notify.cinematic_on") })
         end
     else
         CinematicShow(false)
         if Menu.isCinematicNotifChecked then
-            ESX.ShowNotification(Lang:t("notify.cinematic_off"), 'error')
+            lib.notify({ description = Lang:t("notify.cinematic_off") })
         end
         local player = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(player)
@@ -601,13 +601,15 @@ RegisterNetEvent('hud:client:ToggleAirHud', function()
     showAltitude = not showAltitude
 end)
 
-RegisterNetEvent('hud:client:UpdateNeeds', function(newHunger, newThirst) -- Triggered in qb-core
-    hunger = newHunger
-    thirst = newThirst
-end)
+AddEventHandler('esx_status:onTick', function(data)
+    local newHunger, newThirst
+    for i = 1, #data do
+        if data[i].name == 'thirst' then newThirst = math.floor(data[i].percent) end
+        if data[i].name == 'hunger' then newHunger = math.floor(data[i].percent) end
+    end
 
-RegisterNetEvent('seatbelt:client:ToggleCruise', function() -- Triggered in smallresources
-    cruiseOn = not cruiseOn
+    thirst = newThirst
+    hunger = newHunger
 end)
 
 RegisterNetEvent('hud:client:UpdateNitrous', function(hasNitro, nitroLevel, bool)
@@ -689,9 +691,9 @@ RegisterCommand('+engine', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
     if vehicle == 0 or GetPedInVehicleSeat(vehicle, -1) ~= PlayerPedId() then return end
     if GetIsVehicleEngineRunning(vehicle) then
-        ESX.ShowNotification(Lang:t("notify.engine_off"))
+        lib.notify({ description = Lang:t("notify.engine_off") })
     else
-        ESX.ShowNotification(Lang:t("notify.engine_on"))
+        lib.notify({ description = Lang:t("notify.engine_on") })
     end
     SetVehicleEngineOn(vehicle, not GetIsVehicleEngineRunning(vehicle), false, true)
 end)
@@ -813,8 +815,11 @@ local function getFuelLevel(vehicle)
     local updateTick = GetGameTimer()
     if (updateTick - lastFuelUpdate) > 2000 then
         lastFuelUpdate = updateTick
-        lastFuelCheck = GetVehicleFuelLevel(vehicle)
-        -- lastFuelCheck = math.floor(exports[Config.FuelScript]:GetFuel(vehicle))
+        if Config.FuelScript == 'ox_fuel' then
+            lastFuelCheck = Entity(vehicle).state.fuel
+        else
+            lastFuelCheck = math.floor(exports[Config.FuelScript]:GetFuel(vehicle))
+        end
     end
     return lastFuelCheck
 end
@@ -860,7 +865,6 @@ CreateThread(function()
             local voice = 0
             if LocalPlayer.state['proximity'] then
                 voice = LocalPlayer.state['proximity'].distance
-                -- Player enters server with Voice Chat off, will not have a distance (nil)
                 if voice == nil then
                     voice = 0
                 end
@@ -873,16 +877,7 @@ CreateThread(function()
             local vehicle = GetVehiclePedIsIn(player)
 
             if not (IsPedInAnyVehicle(player) and not IsThisModelABicycle(vehicle)) then
-                TriggerEvent('esx_status:getStatus', 'hunger', function(status)
-                    if status then
-                        hunger = status.val / 10000
-                    end
-                end)
-                TriggerEvent('esx_status:getStatus', 'thirst', function(status)
-                    if status then
-                        thirst = status.val / 10000
-                    end
-                end)
+
                 updatePlayerHud({
                     show,
                     GetEntityHealth(player) - 100,
@@ -918,17 +913,6 @@ CreateThread(function()
                 if not wasInVehicle then
                     DisplayRadar(Menu.isMapEnabledChecked)
                 end
-
-                TriggerEvent('esx_status:getStatus', 'hunger', function(status)
-                    if status then
-                        hunger = status.val / 10000
-                    end
-                end)
-                TriggerEvent('esx_status:getStatus', 'thirst', function(status)
-                    if status then
-                        thirst = status.val / 10000
-                    end
-                end)
 
                 wasInVehicle = true
                 
@@ -978,7 +962,6 @@ CreateThread(function()
                 DisplayRadar(not Menu.isOutMapChecked)
             end
         else
-            -- Not logged in, dont show Status/Vehicle UI (cached)
             updateShowPlayerHud(false)
             updateShowVehicleHud(false)
             DisplayRadar(false)
@@ -1007,16 +990,16 @@ CreateThread(function()
                     if Entity(GetVehiclePedIsIn(ped, false)).state.fuel <= 20 then
                         if Menu.isLowFuelChecked then
                             TriggerServerEvent("InteractSound_SV:PlayOnSource", "pager", 0.10)
-                            ESX.ShowNotification(Lang:t("notify.low_fuel"), "error")
-                            Wait(60000) -- repeats every 1 min until empty
+                            lib.notify({ description = Lang:t("notify.low_fuel") })
+                            Wait(60000)
                         end
                     end
                 else
-                    if exports[Config.FuelScript]:GetFuel(GetVehiclePedIsIn(ped, false)) <= 20 then -- At 20% Fuel Left
+                    if exports[Config.FuelScript]:GetFuel(GetVehiclePedIsIn(ped, false)) <= 20 then
                         if Menu.isLowFuelChecked then
                             TriggerServerEvent("InteractSound_SV:PlayOnSource", "pager", 0.10)
-                            ESX.ShowNotification(Lang:t("notify.low_fuel"), "error")
-                            Wait(60000) -- repeats every 1 min until empty
+                            lib.notify({ description = Lang:t("notify.low_fuel") })
+                            Wait(60000)
                         end
                     end
                 end
@@ -1045,9 +1028,8 @@ RegisterNetEvent('hud:client:ShowAccounts', function(type, amount)
 end)
 
 RegisterNetEvent('hud:client:OnMoneyChange', function(type, amount, isMinus)
-    cashAmount = PlayerData.money['cash']
-    bankAmount = PlayerData.money['bank']
-		if type == 'cash' and amount == 0 then return end
+    cashAmount = PlayerData.accounts['money'].money
+    bankAmount = PlayerData.accounts['bank'].money
     SendNUIMessage({
         action = 'updatemoney',
         cash = cashAmount,
@@ -1057,6 +1039,7 @@ RegisterNetEvent('hud:client:OnMoneyChange', function(type, amount, isMinus)
         type = type
     })
 end)
+
 
 -- Minimap update
 CreateThread(function()
